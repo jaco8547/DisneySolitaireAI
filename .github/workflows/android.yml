@@ -22,16 +22,15 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Accept Android SDK Licenses
-        run: yes | sdkmanager --licenses || true
+        with:
+          accept-android-sdk-licenses: true
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build APK
         run: |
-          chmod +x gradlew
+          chmod +x ./gradlew
           ./gradlew assembleDebug
 
       - name: Upload APK
@@ -39,3 +38,4 @@ jobs:
         with:
           name: DisneySolitaire-debug
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
