@@ -20,22 +20,25 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools'
-
-      - name: Install Android SDK 35
+      - name: Accept Android SDK Licenses
         run: |
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          yes | sdkmanager --licenses
 
-      - name: Setup Gradle 8.9
+      - name: Install Android SDK
+        run: |
+          sdkmanager --sdk_root="$ANDROID_HOME" \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
+
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
       - name: Build APK
-        run: gradle --no-daemon assembleDebug
+        run: |
+          gradle --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
